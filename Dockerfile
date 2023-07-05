@@ -30,7 +30,7 @@ RUN true \
 # download and enter Image Builder (both Python2 and Python3 required)
 && apt update \
 && apt install -y build-essential xsltproc libncursesw5-dev clang flex g++ gawk gcc-multilib gettext \
-git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev wget file \
+git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev wget file curl \
 && echo "Downloading ${IMAGEBUILDER_URL} ..." && mkdir -p "${IMAGEBUILDER_HOME%/*}" && wget -qO - "${IMAGEBUILDER_URL}" | tar xJ -C "${IMAGEBUILDER_HOME%/*}" && echo "OpenWrt Image Builder downloaded and extracted" \
 && cd "${IMAGEBUILDER_HOME}" \
 # need not to use update/install packages from feeds as they are already known and their pre-built *.ipk packages will be downloaded automatically
