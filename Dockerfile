@@ -27,14 +27,9 @@ IMAGEBUILDER_URL="https://runners-cache-sturdynet.s3.us-west-2.amazonaws.com/ima
 IMAGEBUILDER_HOME="/opt/${IMAGEBUILDER_NAME}"
 
 RUN true \
-# download and enter Image Builder (both Python2 and Python3 required)
 && apt update \
 && apt install -y build-essential xsltproc libncursesw5-dev clang flex g++ gawk gcc-multilib gettext \
 git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev wget file curl \
 && echo "Downloading ${IMAGEBUILDER_URL} ..." && mkdir -p "${IMAGEBUILDER_HOME%/*}" && wget -qO - "${IMAGEBUILDER_URL}" | tar xJ -C "${IMAGEBUILDER_HOME%/*}" && echo "OpenWrt Image Builder downloaded and extracted" \
 && cd "${IMAGEBUILDER_HOME}" \
-# need not to use update/install packages from feeds as they are already known and their pre-built *.ipk packages will be downloaded automatically
-#&& wget https://downloads.openwrt.org/releases/${OPENWRT_VERSION}/packages/${OPENWRT_ARCH}/feeds.conf \
-#&& mkdir -p ./package && ./scripts/feeds update -a && ./scripts/feeds install -a \
-# clean up
 && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
