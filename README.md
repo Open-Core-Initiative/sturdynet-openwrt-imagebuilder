@@ -10,7 +10,7 @@
 
 | File                       | Description                                         |
 | :------------------------ | :-------------------------------------------------------- |
-| `Dockerfile` | This file will be use to create a docker image of our imagebuilder.        |
+| `Dockerfile` | This file will be used to create a docker image of our imagebuilder.        |
 | `.github/workflows/main.yml` | Yaml file used by GitHub action to build images.        |
 
 ---
@@ -37,30 +37,27 @@
 
 ---
 
-## How to dockerised your imagebuilder?
+## How to dockerize your imagebuilder?
 
-1. Open `Dockerfile` and change `IMAGEBUILDER_URL` to you imagebuilder file link.
+1. Open `Dockerfile` and change `IMAGEBUILDER_URL` to your imagebuilder file link.
 2. Change `IMAGEBUILDER_NAME` to your file name.
 3. Change the following env variables to match your Imagebuilder details:
 
-        ```
             ENV \
             OPENWRT_ARCH="${OPENWRT_ARCH:-YOUR_ARCHITECTURE}" \
             OPENWRT_HOST="${OPENWRT_HOST:-YOUR_HOST}" \
             OPENWRT_TARGET="${OPENWRT_TARGET:-YOUR_TARGET}" \
             OPENWRT_SUBTARGET="${OPENWRT_SUBTARGET:-YOUR_SUBTARGET}" \
             OPENWRT_VERSION="${OPENWRT_VERSION:-YOUR_VERSION}"
-        ```
+        
 4. Go to `.github/workflows/main.yml` file and change the following name to your intended docker image name:
 
-        ```
             - run: sudo docker image build --file=Dockerfile --pull --tag=${{ secrets.DOCKERHUB_USERNAME }}/YOUR_DOCKER_IMAGE_NAME:YOUR_DOCKER_TAG .
             - run: sudo docker push "${{ secrets.DOCKERHUB_USERNAME }}/YOUR_DOCKER_IMAGE_NAME:YOUR_DOCKER_TAG"
-        ```
 
 ---
 
-## How to setup a self-hosted Github runner?
+## How to set up a self-hosted Github runner?
 
 To create a self-hosted runner for this project we need to have a Ubuntu running instance with [Docker installed](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository). AWS EC2 instance recommended.
 
