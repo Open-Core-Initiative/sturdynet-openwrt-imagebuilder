@@ -1,6 +1,6 @@
 <p  align="center">
 
-<img  src="https://github.com/Open-Core-Initiative/sturdynet-openwrt-sdk/assets/41849970/1609abaa-e0b7-453c-944e-23740f3c25d5">
+<img  src="https://github.com/Open-Core-Initiative/sturdynet-openwrt-imagebuilder/assets/41849970/0ca6598d-fe1c-4736-b3fa-71c8d58ac6d1">
 
 </p>
 
