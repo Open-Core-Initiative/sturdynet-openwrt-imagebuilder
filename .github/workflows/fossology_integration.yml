@@ -38,7 +38,7 @@ jobs:
           )
           echo ::add-mask::$FOSSY_BEARER_TOKEN
           echo FOSSY_BEARER_TOKEN="$FOSSY_BEARER_TOKEN" >> $GITHUB_ENV
-      - run: echo "FILE_DESCRIPTION=Repository name:${GITHUB_REPOSITORY#*/}, Branch:${GITHUB_REF##*/}, Date:$(date '+%H:%M %d%m%Y')" >> $GITHUB_ENV
+      - run: echo "FILE_DESCRIPTION=Repository name:${GITHUB_REPOSITORY#*/}, Branch:${GITHUB_REF##*/}, Date:$(date '+%H:%M %d/%m/%Y')" >> $GITHUB_ENV
       - name: UPLOADING ZIP FILE TO FOSSOLOGY
         run: |
           curl -v --location '${{ secrets.FOSSY_BASE_URL }}/api/v1/uploads' \
