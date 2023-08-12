@@ -17,3 +17,4 @@ jobs:
       - run: ls
       - run: sudo apt-get update && sudo apt-get install zip -y
       - run: zip -r ${GITHUB_REF##*/}.zip . -x '*.git*'
+      - run: ls
