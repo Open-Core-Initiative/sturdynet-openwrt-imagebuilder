@@ -14,14 +14,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - run: ls
       - run: sudo apt-get update && sudo apt-get install zip -y
-      - run: zip -r ${GITHUB_REF##*/}.zip . -x '*.git*'
-      - run: ls
+      - run: echo "REPO_NAME=imagebuilder" >> $GITHUB_ENV
+      - run: zip -r ${{ env.REPO_NAME }}-${GITHUB_REF##*/}.zip . -x '*.git*'
       # UPLOAD FIRWARE TO OPENWISP
       - run: echo "TOKEN_EXPIRY_DATE=$(date -d '+1 day' '+%Y-%m-%d')" >> $GITHUB_ENV
-      - run: echo "TOKEN_NAME=imagebuilder-$(date '+%H%M%S')" >> $GITHUB_ENV
-      - run: echo "UPLOAD_FILE_PATH=${GITHUB_WORKSPACE}/${GITHUB_REF##*/}.zip" >> $GITHUB_ENV
+      - run: echo "TOKEN_NAME=${{ env.REPO_NAME }}-$(date '+%H%M%S')" >> $GITHUB_ENV
+      - run: echo "UPLOAD_FILE_PATH=${GITHUB_WORKSPACE}/${{ env.REPO_NAME }}-${GITHUB_REF##*/}.zip" >> $GITHUB_ENV
       - name: FOSSOLOGY API CALLS
         run: |
           FOSSY_LOGIN_RESPONSE=$( \
