@@ -73,16 +73,99 @@ jobs:
             )
             
             if [ "$actual_status" = "Completed" ]; then
-              echo "Desired status received: $actual_status"
+              echo "Upload status: $actual_status"
               break
             else
-              echo "Status is $actual_status. Retrying..."
+              echo "Upload status is $actual_status. Retrying..."
               sleep 60  # Wait for 60 seconds before the next iteration
               retries=$((retries + 1))
             fi
           done
 
           if [ $retries -eq $max_retries ]; then
-            echo "Max retries reached. Unable to get the desired status."
+            echo "Max retries reached. Unable to get the upload file."
             exit 1
           fi
+      - name: SCHEDULE SCAN AGENTS
+        run: |
+          FOSSY_SCAN_RESPONSE=$( \
+          curl -v --location '${{ secrets.FOSSY_BASE_URL }}/api/v1/jobs' \
+          --header 'Authorization: ${{ env.FOSSY_BEARER_TOKEN }}' \
+          --header 'Content-Type: application/json' \
+          --header 'folderId: 1' \
+          --header 'uploadId: ${{ env.FOSSY_UPLOAD_ID }}' \
+          --data '{ \
+             "analysis": { \
+                   "bucket": true, \
+                   "copyright_email_author": true, \
+                   "ecc": true, \
+                   "keyword": true, \
+                   "mime": true, \
+                   "monk": true, \
+                   "nomos": true, \
+                   "package": true \
+                   "spasht": true \
+                   "scancode": true \
+                   "reso": true \
+                   "ojo": true \
+              }, \
+              "decider": { \
+                   "nomos_monk": true, \
+                   "bulk_reused": true, \
+                   "new_scanner": true \
+                } \
+          }' \
+          )
+          echo FOSSY_SCAN_RESPONSE="$FOSSY_SCAN_RESPONSE" >> $GITHUB_ENV
+      - name: GETTING FOSSOLOGY SCAN ID
+        run: |
+          FOSSY_SCAN_ID=$( \
+          echo $FOSSY_SCAN_RESPONSE | jq -r '.message' \
+          )
+          echo FOSSY_SCAN_ID="$FOSSY_SCAN_ID" >> $GITHUB_ENV
+      - run: mkdir public
+      - name: GENERATE dep5 REPORT
+        run: |
+          FOSSY_DEP5_RESPONSE=$( \
+          curl -v --location '${{ secrets.FOSSY_BASE_URL }}/api/v1/report' \
+          --header 'Authorization: ${{ env.FOSSY_BEARER_TOKEN }}' \
+          --header 'reportFormat: dep5' \
+          --header 'uploadId: ${{ env.FOSSY_UPLOAD_ID }}' \
+          )
+          echo FOSSY_DEP5_RESPONSE="$FOSSY_DEP5_RESPONSE" >> $GITHUB_ENV
+      - name: GET dep5 REPORT URL
+        run: |
+          FOSSY_DEP5_REPORT_URL=$( \
+          echo $FOSSY_DEP5_RESPONSE | jq -r '.message' \
+          )
+          echo FOSSY_DEP5_REPORT_URL="$FOSSY_DEP5_REPORT_URL" >> $GITHUB_ENV
+      - name: DOWNLOAD dep5 REPORT
+        run: |
+          max_retries=5
+          retries=0
+
+          while [ $retries -lt $max_retries ]; do
+            response_code=$( \
+            curl -s -o public/dep5.txt -w "%{http_code}" --location '${{ env.FOSSY_DEP5_REPORT_URL }}' \
+            --header 'Authorization: ${{ env.FOSSY_BEARER_TOKEN }}' \
+            )
+            
+            if [ "$response_code" != "513" ]; then
+              echo "Response code is $response_code. Continuing..."
+              break
+            else
+              echo "Response code is $response_code. Retrying..."
+              sleep 5  # Wait for 5 seconds before the next iteration
+              retries=$((retries + 1))
+            fi
+          done
+
+          if [ $retries -eq $max_retries ]; then
+            echo "Max retries reached. Unable to download the report."
+            exit 1
+          fi
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          # Upload public repository
+          path: public
