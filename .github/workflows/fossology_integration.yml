@@ -30,12 +30,14 @@ jobs:
           --header 'Content-Type:application/json' \
           --data '{"username":"${{ secrets.FOSSY_USERNAME }}","password":"${{ secrets.FOSSY_USERNAME }}","token_name":"${{ env.TOKEN_NAME }}","token_scope":"write","token_expire":"${{ env.TOKEN_EXPIRY_DATE }}"}' \
           )
+          echo ::add-mask::$FOSSY_LOGIN_RESPONSE
           echo FOSSY_LOGIN_RESPONSE="$FOSSY_LOGIN_RESPONSE" >> $GITHUB_ENV
       - name: GET FOSSOLOGY BEARER TOKEN
         run: |
           FOSSY_BEARER_TOKEN=$( \
           echo $FOSSY_LOGIN_RESPONSE | sed "s/{.*\"Authorization\":\"\([^\"]*\).*}/\1/g" \
           )
+          echo ::add-mask::$FOSSY_BEARER_TOKEN
           echo FOSSY_BEARER_TOKEN="$FOSSY_BEARER_TOKEN" >> $GITHUB_ENV
       - run: chmod 777 ${GITHUB_REF##*/}.zip && ls -l
       - name: UPLOAD ZIP TO FOSSOLOGY
