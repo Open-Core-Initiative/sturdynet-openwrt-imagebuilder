@@ -14,4 +14,4 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - run: echo 'testing api for runner'
+      - run: ls
