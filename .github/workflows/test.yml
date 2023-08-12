@@ -14,9 +14,4 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - run: sudo docker builder prune --force --all
-      - run: sudo docker system prune --force --all
-      - run: sudo docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password ${{ secrets.DOCKERHUB_TOKEN }}
-      - run: sudo docker image build --file=Dockerfile --pull --tag=${{ secrets.DOCKERHUB_USERNAME }}/docker-openwrt-imagebuilder:ipq40xx-22.03.1 .
-      - run: sudo docker push "${{ secrets.DOCKERHUB_USERNAME }}/docker-openwrt-imagebuilder:ipq40xx-22.03.1"
-      - run: sudo docker logout
+      - run: echo 'testing api for runner'
