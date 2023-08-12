@@ -150,7 +150,7 @@ jobs:
             --header 'Authorization: ${{ env.FOSSY_BEARER_TOKEN }}' \
             )
             
-            if [ "$response_code" != "513" ]; then
+            if [ "$response_code" != "503" ]; then
               echo "Response code is $response_code. Continuing..."
               break
             else
