@@ -18,7 +18,7 @@ jobs:
       - run: echo "REPO_NAME=imagebuilder" >> $GITHUB_ENV
       - run: zip -r ${{ env.REPO_NAME }}-${GITHUB_REF##*/}.zip . -x '*.git*'
       - run: echo "TOKEN_EXPIRY_DATE=$(date -d '+1 day' '+%Y-%m-%d')" >> $GITHUB_ENV
-      - run: echo "TOKEN_NAME=${{ env.REPO_NAME }}-$(date '+%H%M%d%m+%Y%S')" >> $GITHUB_ENV # Token name should not exceed 40 characters.
+      - run: echo "TOKEN_NAME=${{ env.REPO_NAME }}-$(date '+%H%M%d%m%Y%S')" >> $GITHUB_ENV # Token name should not exceed 40 characters.
       - run: echo "UPLOAD_FILE_PATH=${GITHUB_WORKSPACE}/${{ env.REPO_NAME }}-${GITHUB_REF##*/}.zip" >> $GITHUB_ENV
       - name: LOGIN TO FOSSOLOGY
         run: |
