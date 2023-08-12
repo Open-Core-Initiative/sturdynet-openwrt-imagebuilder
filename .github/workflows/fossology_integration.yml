@@ -150,12 +150,12 @@ jobs:
             --header 'Authorization: ${{ env.FOSSY_BEARER_TOKEN }}' \
             )
             
-            if [ "$response_code" != "503" ]; then
-              echo "Response code is $response_code. Continuing..."
+            if [ "$response_code" = "200" ]; then
+              echo "Response code is $response_code. Downloading..."
               break
             else
               echo "Response code is $response_code. Retrying..."
-              sleep 5  # Wait for 5 seconds before the next iteration
+              sleep 60  # Wait for 60 seconds before the next iteration
               retries=$((retries + 1))
             fi
           done
