@@ -71,7 +71,7 @@ jobs:
             )
             echo FOSSY_UPLOAD_STATUS="$FOSSY_UPLOAD_STATUS" >> $GITHUB_ENV
             
-            if [ ${{ env.FOSSY_UPLOAD_STATUS }} = "Completed" ]; then
+            if [ ${{ env.FOSSY_UPLOAD_STATUS }} -eq "Completed" ]; then
               echo "Desired status received: ${{ env.FOSSY_UPLOAD_STATUS }}"
               break
             else
