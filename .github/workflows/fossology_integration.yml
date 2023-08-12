@@ -19,8 +19,8 @@ jobs:
       - run: zip -r ${GITHUB_REF##*/}.zip . -x '*.git*'
       - run: ls
       # UPLOAD FIRWARE TO OPENWISP
-      - run: echo "TOKEN_EXPIRY_DATE=$(date -d '+2 day' '+%Y-%m-%d')" >> $GITHUB_ENV
-      - run: echo "TOKEN_NAME=${GITHUB_REPOSITORY#*/}-${GITHUB_REF##*/}-$(date '+%H%M%S')" >> $GITHUB_ENV
+      - run: echo "TOKEN_EXPIRY_DATE=$(date -d '+1 day' '+%Y-%m-%d')" >> $GITHUB_ENV
+      - run: echo "TOKEN_NAME=imagebuilder-$(date '+%H%M%S')" >> $GITHUB_ENV
       - run: echo "UPLOAD_FILE_PATH=${GITHUB_WORKSPACE}/${GITHUB_REF##*/}.zip" >> $GITHUB_ENV
       - name: FOSSOLOGY API CALLS
         run: |
