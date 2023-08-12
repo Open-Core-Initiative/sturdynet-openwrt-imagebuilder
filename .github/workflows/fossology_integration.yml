@@ -39,12 +39,13 @@ jobs:
           echo FOSSY_BEARER_TOKEN="$FOSSY_BEARER_TOKEN" >> $GITHUB_ENV
       - name: MANAGING ZIP FILE PERMISSIONS
         run: chmod 777 ${{ env.REPO_NAME }}-${GITHUB_REF##*/}.zip && ls -l
+      - run: echo "FILE_DESCRIPTION=Repository name:${GITHUB_REPOSITORY#*/}, Branch:${GITHUB_REF##*/}, Date:$(date '+%H:%M %d%m%Y%')" >> $GITHUB_ENV
       - name: UPLOADING ZIP FILE TO FOSSOLOGY
         run: |
           curl -v --location '${{ secrets.FOSSY_BASE_URL }}/api/v1/uploads' \
           --header 'Authorization: ${{ env.FOSSY_BEARER_TOKEN }}' \
           --header 'folderId: 1' \
-          --header 'uploadDescription: ${{ env.TOKEN_NAME }} Upload' \
+          --header 'uploadDescription: ${{ env.FILE_DESCRIPTION }} Upload' \
           --header 'uploadType: file' \
           --header 'public: public' \
           --form 'fileInput=@"${{ env.UPLOAD_FILE_PATH }}"'
