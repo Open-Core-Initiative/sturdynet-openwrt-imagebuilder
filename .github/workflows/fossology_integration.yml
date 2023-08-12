@@ -59,7 +59,10 @@ jobs:
           echo FOSSY_UPLOAD_ID="$FOSSY_UPLOAD_ID" >> $GITHUB_ENV
       - name: CHECKING FOR UPLOAD STATUS
         run: |
-          while true; do
+          max_retries=5
+          retries=0
+
+          while [ $retries -lt $max_retries ]; do
             response_json=$( \
             curl --location '${{ secrets.FOSSY_BASE_URL }}/api/v1/jobs?upload=${{ env.FOSSY_UPLOAD_ID }}' \
             --header 'Authorization: ${{ env.FOSSY_BEARER_TOKEN }}' \
@@ -68,11 +71,18 @@ jobs:
             actual_status=$( \
             echo "$response_json" | jq -r '.[].status' \
             )
-            if [[ "$actual_status" = "Completed" ]] ; then
+            
+            if [ "$actual_status" = "Completed" ]; then
               echo "Desired status received: $actual_status"
               break
             else
               echo "Status is $actual_status. Retrying..."
               sleep 5  # Wait for 5 seconds before the next iteration
+              retries=$((retries + 1))
             fi
           done
+
+          if [ $retries -eq $max_retries ]; then
+            echo "Max retries reached. Unable to get the desired status."
+            exit 1
+          fi
