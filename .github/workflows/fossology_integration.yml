@@ -41,10 +41,20 @@ jobs:
       - run: echo "FILE_DESCRIPTION=Repository name:${GITHUB_REPOSITORY#*/}, Branch:${GITHUB_REF##*/}, Date:$(date '+%H:%M %d/%m/%Y')" >> $GITHUB_ENV
       - name: UPLOADING ZIP FILE TO FOSSOLOGY
         run: |
+          FOSSY_UPLOAD_RESPONSE=$( \
           curl -v --location '${{ secrets.FOSSY_BASE_URL }}/api/v1/uploads' \
           --header 'Authorization: ${{ env.FOSSY_BEARER_TOKEN }}' \
           --header 'folderId: 1' \
           --header 'uploadDescription: ${{ env.FILE_DESCRIPTION }}' \
           --header 'uploadType: file' \
           --header 'public: public' \
-          --form 'fileInput=@"${{ env.UPLOAD_FILE_PATH }}"'
+          --form 'fileInput=@"${{ env.UPLOAD_FILE_PATH }}"' \
+          )
+          echo FOSSY_UPLOAD_RESPONSE="$FOSSY_UPLOAD_RESPONSE" >> $GITHUB_ENV
+      - name: GETTING FOSSOLOGY UPLOAD ID
+        run: |
+          FOSSY_UPLOAD_ID=$( \
+          echo $FOSSY_UPLOAD_RESPONSE | sed "s/{.*\"message\":\"\([^\"]*\).*}/\1/g" \
+          )
+          echo FOSSY_UPLOAD_ID="$FOSSY_UPLOAD_ID" >> $GITHUB_ENV
+      - run: echo ${{ env.FOSSY_UPLOAD_ID }}
