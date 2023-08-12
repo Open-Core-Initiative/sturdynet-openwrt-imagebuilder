@@ -61,13 +61,13 @@ jobs:
         run: |
           while true; do
             FOSSY_CHECK_UPLOAD_COMPLETED=$( \
-            curl -v --location '${{ secrets.FOSSY_BASE_URL }}/api/v1/jobs?upload=${{ env.FOSSY_UPLOAD_ID }}' \
+            curl --location '${{ secrets.FOSSY_BASE_URL }}/api/v1/jobs?upload=${{ env.FOSSY_UPLOAD_ID }}' \
             --header 'Authorization: ${{ env.FOSSY_BEARER_TOKEN }}' \
             )
             echo FOSSY_CHECK_UPLOAD_COMPLETED="$FOSSY_CHECK_UPLOAD_COMPLETED" >> $GITHUB_ENV
 
             FOSSY_UPLOAD_STATUS=$( \
-            echo $FOSSY_UPLOAD_STATUS | jq -r '.[].status' \
+            echo $FOSSY_CHECK_UPLOAD_COMPLETED | jq -r '.[].status' \
             )
             echo FOSSY_UPLOAD_STATUS="$FOSSY_UPLOAD_STATUS" >> $GITHUB_ENV
             
