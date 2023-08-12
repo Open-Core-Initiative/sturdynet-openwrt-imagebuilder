@@ -67,7 +67,7 @@ jobs:
             echo FOSSY_CHECK_UPLOAD_COMPLETED="$FOSSY_CHECK_UPLOAD_COMPLETED" >> $GITHUB_ENV
 
             FOSSY_UPLOAD_STATUS=$( \
-            echo $FOSSY_UPLOAD_STATUS | jq -r '.status' \
+            echo $FOSSY_UPLOAD_STATUS | jq -r '.[].status' \
             )
             echo FOSSY_UPLOAD_STATUS="$FOSSY_UPLOAD_STATUS" >> $GITHUB_ENV
             
