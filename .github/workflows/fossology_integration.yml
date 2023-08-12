@@ -20,7 +20,7 @@ jobs:
       - run: ls
       # UPLOAD FIRWARE TO OPENWISP
       - run: echo "TOKEN_EXPIRY_DATE=$(date -d '+2 day' '+%Y-%m-%d')" >> $GITHUB_ENV
-      - run: echo "CURRENT_TIME=$(date '+%H%M%S')" >> $GITHUB_ENV
+      - run: echo "TOKEN_NAME=${GITHUB_REPOSITORY#*/}-${GITHUB_REF##*/}-$(date '+%H%M%S')" >> $GITHUB_ENV
       - run: echo "UPLOAD_FILE_PATH=${GITHUB_WORKSPACE}/${GITHUB_REF##*/}.zip" >> $GITHUB_ENV
       - name: FOSSOLOGY API CALLS
         run: |
@@ -28,7 +28,7 @@ jobs:
           curl --request POST \
           --location '${{ secrets.FOSSY_BASE_URL }}/api/v1/tokens' \
           --header 'Content-Type:application/json' \
-          --data '{"username":"${{ secrets.FOSSY_USERNAME }}","password":"${{ secrets.FOSSY_USERNAME }}","token_name":"${{ env.GITHUB_REPOSITORY#*/ }}-${{ env.GITHUB_REF##*/ }}-${{ env.CURRENT_TIME }}","token_scope":"write","token_expire":"${{ env.TOKEN_EXPIRY_DATE }}"}' \
+          --data '{"username":"${{ secrets.FOSSY_USERNAME }}","password":"${{ secrets.FOSSY_USERNAME }}","token_name":"${{ env.TOKEN_NAME }}","token_scope":"write","token_expire":"${{ env.TOKEN_EXPIRY_DATE }}"}' \
           )
           echo FOSSY_LOGIN_RESPONSE="$FOSSY_LOGIN_RESPONSE" >> $GITHUB_ENV
       - name: GET FOSSOLOGY BEARER TOKEN
@@ -43,7 +43,7 @@ jobs:
           curl -v --location '${{ secrets.FOSSY_BASE_URL }}/api/v1/uploads' \
           --header 'Authorization: ${{ env.FOSSY_BEARER_TOKEN }}' \
           --header 'folderId: 1' \
-          --header 'uploadDescription: ${{ env.GITHUB_REPOSITORY#*/ }}-${{ env.GITHUB_REF##*/ }} Upload' \
+          --header 'uploadDescription: ${{ env.TOKEN_NAME }} Upload' \
           --header 'uploadType: file' \
           --header 'public: public' \
           --form 'fileInput=@"${{ env.UPLOAD_FILE_PATH }}"'
