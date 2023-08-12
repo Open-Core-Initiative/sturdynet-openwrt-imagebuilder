@@ -77,7 +77,7 @@ jobs:
               break
             else
               echo "Status is $actual_status. Retrying..."
-              sleep 5  # Wait for 5 seconds before the next iteration
+              sleep 60  # Wait for 60 seconds before the next iteration
               retries=$((retries + 1))
             fi
           done
