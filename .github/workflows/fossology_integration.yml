@@ -15,4 +15,4 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - run: ls
-      - run: apt-get update && apt-get install zip -y
+      - run: sudo apt-get update && sudo apt-get install zip -y
