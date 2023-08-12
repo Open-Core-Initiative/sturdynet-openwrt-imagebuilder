@@ -17,11 +17,10 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install zip -y
       - run: echo "REPO_NAME=imagebuilder" >> $GITHUB_ENV
       - run: zip -r ${{ env.REPO_NAME }}-${GITHUB_REF##*/}.zip . -x '*.git*'
-      # UPLOAD FIRWARE TO OPENWISP
       - run: echo "TOKEN_EXPIRY_DATE=$(date -d '+1 day' '+%Y-%m-%d')" >> $GITHUB_ENV
-      - run: echo "TOKEN_NAME=${{ env.REPO_NAME }}-$(date '+%H%M%S')" >> $GITHUB_ENV
+      - run: echo "TOKEN_NAME=${{ env.REPO_NAME }}-$(date '+%H%M%S')" >> $GITHUB_ENV # Token name should not exceed 40 characters.
       - run: echo "UPLOAD_FILE_PATH=${GITHUB_WORKSPACE}/${{ env.REPO_NAME }}-${GITHUB_REF##*/}.zip" >> $GITHUB_ENV
-      - name: FOSSOLOGY API CALLS
+      - name: LOGIN TO FOSSOLOGY
         run: |
           FOSSY_LOGIN_RESPONSE=$( \
           curl --request POST \
@@ -31,15 +30,16 @@ jobs:
           )
           echo ::add-mask::$FOSSY_LOGIN_RESPONSE
           echo FOSSY_LOGIN_RESPONSE="$FOSSY_LOGIN_RESPONSE" >> $GITHUB_ENV
-      - name: GET FOSSOLOGY BEARER TOKEN
+      - name: GETTING FOSSOLOGY BEARER TOKEN
         run: |
           FOSSY_BEARER_TOKEN=$( \
           echo $FOSSY_LOGIN_RESPONSE | sed "s/{.*\"Authorization\":\"\([^\"]*\).*}/\1/g" \
           )
           echo ::add-mask::$FOSSY_BEARER_TOKEN
           echo FOSSY_BEARER_TOKEN="$FOSSY_BEARER_TOKEN" >> $GITHUB_ENV
-      - run: chmod 777 ${{ env.REPO_NAME }}-${GITHUB_REF##*/}.zip && ls -l
-      - name: UPLOAD ZIP TO FOSSOLOGY
+      - name: MANAGING ZIP FILE PERMISSIONS
+        run: chmod 777 ${{ env.REPO_NAME }}-${GITHUB_REF##*/}.zip && ls -l
+      - name: UPLOADING ZIP FILE TO FOSSOLOGY
         run: |
           curl -v --location '${{ secrets.FOSSY_BASE_URL }}/api/v1/uploads' \
           --header 'Authorization: ${{ env.FOSSY_BEARER_TOKEN }}' \
