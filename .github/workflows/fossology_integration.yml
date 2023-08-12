@@ -57,26 +57,22 @@ jobs:
           echo $FOSSY_UPLOAD_RESPONSE | jq -r '.message' \
           )
           echo FOSSY_UPLOAD_ID="$FOSSY_UPLOAD_ID" >> $GITHUB_ENV
-      - run: echo "UPLOAD_STATUS_COMPLETED=Completed" >> $GITHUB_ENV
       - name: CHECKING FOR UPLOAD STATUS
         run: |
           while true; do
-            FOSSY_CHECK_UPLOAD_COMPLETED=$( \
+            response_json=$( \
             curl --location '${{ secrets.FOSSY_BASE_URL }}/api/v1/jobs?upload=${{ env.FOSSY_UPLOAD_ID }}' \
             --header 'Authorization: ${{ env.FOSSY_BEARER_TOKEN }}' \
             )
-            echo FOSSY_CHECK_UPLOAD_COMPLETED="$FOSSY_CHECK_UPLOAD_COMPLETED" >> $GITHUB_ENV
 
-            FOSSY_UPLOAD_STATUS=$( \
-            echo $FOSSY_CHECK_UPLOAD_COMPLETED | jq -r '.[].status' \
+            actual_status=$( \
+            echo "$response_json" | jq -r '.[].status' \
             )
-            echo FOSSY_UPLOAD_STATUS="$FOSSY_UPLOAD_STATUS" >> $GITHUB_ENV
-
-            if [[ "${{ env.FOSSY_UPLOAD_STATUS }}" = "Completed" ]] ; then
-              echo "Desired status received: ${{ env.FOSSY_UPLOAD_STATUS }}"
+            if [[ "$actual_status" = "Completed" ]] ; then
+              echo "Desired status received: $actual_status"
               break
             else
-              echo "Status is ${{ env.FOSSY_UPLOAD_STATUS }}. Retrying..."
+              echo "Status is $actual_status. Retrying..."
               sleep 5  # Wait for 5 seconds before the next iteration
             fi
           done
