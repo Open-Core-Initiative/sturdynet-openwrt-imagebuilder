@@ -38,7 +38,7 @@ jobs:
           )
           echo ::add-mask::$FOSSY_BEARER_TOKEN
           echo FOSSY_BEARER_TOKEN="$FOSSY_BEARER_TOKEN" >> $GITHUB_ENV
-      - run: chmod 777 ${GITHUB_REF##*/}.zip && ls -l
+      - run: chmod 777 ${{ env.REPO_NAME }}-${GITHUB_REF##*/}.zip && ls -l
       - name: UPLOAD ZIP TO FOSSOLOGY
         run: |
           curl -v --location '${{ secrets.FOSSY_BASE_URL }}/api/v1/uploads' \
