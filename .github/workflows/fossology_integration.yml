@@ -57,6 +57,7 @@ jobs:
           echo $FOSSY_UPLOAD_RESPONSE | jq -r '.message' \
           )
           echo FOSSY_UPLOAD_ID="$FOSSY_UPLOAD_ID" >> $GITHUB_ENV
+      - run: echo "UPLOAD_STATUS_COMPLETED=Completed" >> $GITHUB_ENV
       - name: CHECKING FOR UPLOAD STATUS
         run: |
           while true; do
@@ -71,7 +72,7 @@ jobs:
             )
             echo FOSSY_UPLOAD_STATUS="$FOSSY_UPLOAD_STATUS" >> $GITHUB_ENV
             
-            if [ ${{ env.FOSSY_UPLOAD_STATUS }} -eq "Completed" ]; then
+            if [ ${{ env.FOSSY_UPLOAD_STATUS }} = ${{ env.UPLOAD_STATUS_COMPLETED }} ]; then
               echo "Desired status received: ${{ env.FOSSY_UPLOAD_STATUS }}"
               break
             else
