@@ -94,27 +94,27 @@ jobs:
           --header 'Content-Type: application/json' \
           --header 'folderId: 1' \
           --header 'uploadId: ${{ env.FOSSY_UPLOAD_ID }}' \
-          --data '{ \
-             "analysis": { \
-                   "bucket": true, \
-                   "copyright_email_author": true, \
-                   "ecc": true, \
-                   "keyword": true, \
-                   "mime": true, \
-                   "monk": true, \
-                   "nomos": true, \
-                   "package": true \
-                   "spasht": true \
-                   "scancode": true \
-                   "reso": true \
-                   "ojo": true \
-              }, \
-              "decider": { \
-                   "nomos_monk": true, \
-                   "bulk_reused": true, \
-                   "new_scanner": true \
-                } \
-          }' \
+          --data "{
+             \"analysis\": {
+                \"bucket\": true,
+                \"copyright_email_author\": true,
+                \"ecc\": true,
+                \"keyword\": true,
+                \"mime\": true,
+                \"monk\": true,
+                \"nomos\": true,
+                \"package\": true,
+                \"scancode\": true,
+                \"ojo\": true,
+                \"spasht\": true,
+                \"reso\": true
+             },
+             \"decider\": {
+                \"nomos_monk\": true,
+                \"bulk_reused\": true,
+                \"new_scanner\": true
+             }
+          }" \
           )
           echo FOSSY_SCAN_RESPONSE="$FOSSY_SCAN_RESPONSE" >> $GITHUB_ENV
       - name: GETTING FOSSOLOGY SCAN ID
