@@ -76,7 +76,7 @@ jobs:
               echo "Upload status: $actual_status"
               break
             else
-              echo "Upload status is $actual_status. Retrying..."
+              echo "Upload status is $actual_status. Retrying in 60 Seconds..."
               sleep 60  # Wait for 60 seconds before the next iteration
               retries=$((retries + 1))
             fi
@@ -154,7 +154,7 @@ jobs:
               echo "Response code is $response_code. Downloading..."
               break
             else
-              echo "Response code is $response_code. Retrying..."
+              echo "Response code is $response_code. Retrying in 60 Seconds..."
               sleep 60  # Wait for 60 seconds before the next iteration
               retries=$((retries + 1))
             fi
