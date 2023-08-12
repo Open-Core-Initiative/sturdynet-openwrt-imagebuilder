@@ -27,7 +27,7 @@ jobs:
           curl --request POST \
           --location '${{ secrets.FOSSY_BASE_URL }}/api/v1/tokens' \
           --header 'Content-Type:application/json' \
-          --data '{\"username\":\"${{ secrets.FOSSY_USERNAME }}\",\"password\":\"${{ secrets.FOSSY_PASSWORD }}\",\"token_name\":\"${GITHUB_REPOSITORY#*/}-${GITHUB_REF##*/}\",\"token_scope\":\"write\",\"token_expire\":\"2023-08-14\"}' \
+          --data '{\"username\":\"fossy\",\"password\":\"fossy\",\"token_name\":\"sturdynet-imagebuilder\",\"token_scope\":\"write\",\"token_expire\":\"2023-08-14\"}' \
           )
           echo FOSSY_LOGIN_RESPONSE="$FOSSY_LOGIN_RESPONSE" >> $GITHUB_ENV
       - name: GET FOSSOLOGY BEARER TOKEN
